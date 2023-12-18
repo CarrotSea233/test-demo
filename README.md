@@ -156,9 +156,3 @@
 
 ### 3.1 登录页面
 ![Alt text](img/001.png)
-### 3.2 管理员页面
-![Alt text](img/002.png)
-### 3.3 教师页面
-![Alt text](img/003.png)
-### 3.4 学生页面
-![Alt text](img/004.png)
