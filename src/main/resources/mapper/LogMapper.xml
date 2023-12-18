@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mapper.LogMapper">
+    <insert id="insertLog" >
+        insert into log(user_id, log_time, state)
+        values(#{userId}, #{logTime}, #{state})
+    </insert>
+
+    <select id="findLogs" resultType="model.view.LogView">
+        SELECT * FROM log_view
+        <where>
+            <if test="logId != null and logId != ''">
+                AND log_id LIKE CONCAT('%', #{logId}, '%')
+            </if>
+            <if test="userName != null and userName != ''">
+                AND user_name LIKE CONCAT('%', #{userName}, '%')
+            </if>
+            <if test="identity != null and identity != ''">
+                AND identity LIKE CONCAT('%', #{identity}, '%')
+            </if>
+            <if test="logTime != null and logTime != ''">
+                AND log_time LIKE CONCAT('%', #{logTime}, '%')
+            </if>
+            <if test="state != null and state != ''">
+                AND state LIKE CONCAT('%', #{state}, '%')
+            </if>
+            <if test="userId != null and userId != ''">
+                AND user_id LIKE CONCAT('%', #{userId}, '%')
+            </if>
+        </where>
+        order by log_id desc
+    </select>
+
+    <delete id="deleteLog">
+        delete from log where log_id=#{logId}
+    </delete>
+
+</mapper>

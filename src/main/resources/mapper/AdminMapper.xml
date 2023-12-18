@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mapper.AdminMapper">
+    <select id="getAdminByUserId" resultType="model.entity.Admin">
+        select user_id, user_name, gender, age
+        from administrator_information
+        where user_id=#{userId} limit 1
+    </select>
+
+    <update id="updateAdminByUserId">
+        update administrator_information
+        set user_name=#{userName}, gender=#{gender}, age=#{age}
+        where user_id=#{userId}
+    </update>
+
+    <select id="getAdminViewByUserId" resultType="model.view.AdminView">
+        select *
+        from admin_view
+        where user_id=#{userId}
+    </select>
+</mapper>

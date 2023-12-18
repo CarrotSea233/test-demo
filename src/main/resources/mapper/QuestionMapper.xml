@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mapper.QuestionMapper">
+    
+    <insert id="insertQuestion" >
+        INSERT INTO question (question_types, question_name, creation_time,
+            modification_time, question_description, choice_a, choice_b, choice_c, choice_d, solution)
+        VALUES (#{questionTypes}, #{questionName}, #{creationTime}, #{modificationTime},
+            #{questionDescription}, #{choiceA}, #{choiceB}, #{choiceC}, #{choiceD}, #{solution})
+    </insert>
+
+    <select id="findQuestions" resultType="model.entity.Question">
+        SELECT * FROM question
+        <where>
+            <if test="questionId != null and questionId != ''">
+                AND question_id = #{questionId}
+            </if>
+            <if test="questionTypes != null and questionTypes != ''">
+                AND question_types like concat('%', #{questionTypes}, '%')
+            </if>
+            <if test="questionName != null and questionName != ''">
+                AND question_name like concat('%', #{questionName}, '%')
+            </if>
+            <if test="creationTime != null and creationTime != ''">
+                AND creation_time like concat('%', #{creationTime}, '%')
+            </if>
+            <if test="modificationTime != null and modificationTime != ''">
+                AND modification_time like concat('%', #{modificationTime}, '%')
+            </if>
+            <if test="questionDescription != null and questionDescription != ''">
+                AND question_description like concat('%', #{questionDescription}, '%')
+            </if>
+            <if test="choiceA != null and choiceA != ''">
+                AND choice_a like concat('%', #{choiceA}, '%')
+            </if>
+            <if test="choiceB != null and choiceB != ''">
+                AND choice_b like concat('%', #{choiceB}, '%')
+            </if>
+            <if test="choiceC != null and choiceC != ''">
+                AND choice_c like concat('%', #{choiceC}, '%')
+            </if>
+            <if test="choiceD != null and choiceD != ''">
+                AND choice_d like concat('%', #{choiceD}, '%')
+            </if>
+            <if test="solution != null and solution != ''">
+                AND solution like concat('%', #{solution}, '%')
+            </if>
+        </where>
+        order by question_id desc
+    </select>
+
+    <select id="listQuestions" resultType="model.entity.Question">
+        SELECT question_id, question_types, question_name, creation_time, modification_time, question_description, choice_a, choice_b, choice_c, choice_d, solution 
+        FROM question
+        order by question_id desc
+    </select>
+
+    <select id="getQuestionById" resultType="model.entity.Question">
+        SELECT question_id, question_types, question_name, creation_time, modification_time, question_description, choice_a, choice_b, choice_c, choice_d, solution 
+        FROM question 
+        WHERE question_id = #{questionId}
+    </select>
+
+    <update id="updateQuestion">
+        UPDATE question 
+        SET question_types = #{questionTypes}, question_name = #{questionName}, 
+            question_description = #{questionDescription}, choice_a = #{choiceA}, 
+            choice_b = #{choiceB}, choice_c = #{choiceC}, choice_d = #{choiceD}, solution = #{solution}
+        WHERE question_id = #{questionId}
+    </update>
+
+    <delete id="deleteQuestion">
+        delete from question where question_id=#{questionId}
+    </delete>
+
+    <select id="listQuestionsExceptTheExamPart" resultType="model.entity.Question">
+        SELECT question_id, question_types, question_name, creation_time, modification_time, question_description, choice_a, choice_b, choice_c, choice_d, solution 
+        FROM question
+        WHERE question_id not in (
+            select question_id
+            from relation_exam_question
+            where exam_id=#{examId}
+        )
+    </select>
+</mapper>

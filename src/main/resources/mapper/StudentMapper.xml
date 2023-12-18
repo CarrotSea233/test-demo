@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mapper.StudentMapper">
+    <select id="getStudentByUserId" resultType="model.entity.Student">
+        SELECT user_id, student_id, user_name, grade, class_name, major, gender, age
+        FROM student_information
+        WHERE user_id = #{userId}
+    </select>
+
+    <update id="updateStudent" >
+        UPDATE student_information
+        SET
+            user_name = #{userName},
+            grade = #{grade},
+            class_name = #{className},
+            major = #{major},
+            gender = #{gender},
+            age = #{age}
+        WHERE
+            user_id = #{userId}
+    </update>
+
+    <select id="findStudents" resultType="model.view.StudentView">
+        SELECT *
+        FROM student_view
+        <where>
+            <if test="userId != null and userId != ''">
+                AND user_id LIKE CONCAT('%', #{userId}, '%')
+            </if>
+            <if test="studentId != null and studentId != ''">
+                AND student_id LIKE CONCAT('%', #{studentId}, '%')
+            </if>
+            <if test="userName != null and userName != ''">
+                AND user_name LIKE CONCAT('%', #{userName}, '%')
+            </if>
+            <if test="grade != null and grade != ''">
+                AND grade LIKE CONCAT('%', #{grade}, '%')
+            </if>
+            <if test="className != null and className != ''">
+                AND class_name LIKE CONCAT('%', #{className}, '%')
+            </if>
+            <if test="major != null and major != ''">
+                AND major LIKE CONCAT('%', #{major}, '%')
+            </if>
+            <if test="gender != null and gender != ''">
+                AND gender LIKE CONCAT('%', #{gender}, '%')
+            </if>
+            <if test="age != null and age != ''">
+                AND age LIKE CONCAT('%', #{age}, '%')
+            </if>
+            <if test="account != null and account != ''">
+                AND account LIKE CONCAT('%', #{account}, '%')
+            </if>
+            <if test="password != null and password != ''">
+                AND password LIKE CONCAT('%', #{password}, '%')
+            </if>
+            <if test="identity != null and identity != ''">
+                AND identity LIKE CONCAT('%', #{identity}, '%')
+            </if>
+        </where>
+        order by user_id desc
+    </select>
+
+    <delete id="deleteStudent">
+        delete from student_information where user_id=#{userId}
+    </delete>
+
+    <select id="getStudentViewByUserId" resultType="model.view.StudentView">
+        select *
+        from student_view
+        where user_id=#{userId}
+    </select>
+    
+</mapper>

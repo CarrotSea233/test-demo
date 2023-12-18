@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mapper.TestMapper">
+    <insert id="insertTest">
+        INSERT INTO test
+        (test_name, exam_id, test_start_time, test_end_time, class_name)
+        VALUES
+        (#{testName}, #{examId}, #{testStartTime}, #{testEndTime}, #{className})
+    </insert>
+
+    <select id="getTest" resultType="model.entity.Test">
+        SELECT test_id, test_name, exam_id, test_start_time, test_end_time, class_name
+        FROM test
+        WHERE test_name=#{testName} and exam_id=#{examId} and test_start_time=#{testStartTime} and test_end_time=#{testEndTime} and class_name=#{className}
+        limit 1
+    </select>
+
+    <select id="getTestById" resultType="model.entity.Test">
+        SELECT test_id, test_name, exam_id, test_start_time, test_end_time, class_name
+        FROM test
+        WHERE test_id=#{testId}
+        limit 1
+    </select>
+
+    <update id="updateTest">
+        UPDATE test
+        SET test_name = #{testName},
+            exam_id = #{examId},
+            test_start_time = #{testStartTime},
+            test_end_time = #{testEndTime},
+            class_name = #{className}
+        WHERE test_id = #{testId}
+    </update>
+
+    <select id="findTests" resultType="model.entity.Test">
+        SELECT * FROM test
+        <where>
+            <if test="testId != null and testId != ''">
+            AND test_id=#{test_id}
+            </if>
+            <if test="testName != null and testName != ''">
+            AND test_name LIKE CONCAT('%', #{testName}, '%')
+            </if>
+            <if test="examId != null and examId != ''">
+            AND exam_id=#{examId}
+            </if>
+            <if test="testStartTime != null and testStartTime != ''">
+            AND test_start_time LIKE CONCAT('%', #{testStartTime}, '%')
+            </if>
+            <if test="testEndTime != null and testEndTime != ''">
+            AND test_end_time LIKE CONCAT('%', #{testEndTime}, '%')
+            </if>
+            <if test="className != null and className != ''">
+            AND class_name LIKE CONCAT('%', #{className}, '%')
+            </if>
+        </where>
+        order by test_id desc
+    </select>
+
+    <delete id="deleteTest">
+        delete from test where test_id=#{testId}
+    </delete>
+
+    <select id="findTestsByClassName" resultType="model.entity.Test">
+        select *
+        from test
+        where class_name=#{className}
+        order by test_id desc
+    </select>
+
+    <insert id="insertReTestQuestion">
+        INSERT INTO relation_test_question (test_id, question_id, user_id, answer, the_score)
+        VALUES (#{testId}, #{questionId}, #{userId}, #{answer}, #{theScore})
+    </insert>
+
+    <select id="getReTestQuestionByTestAndQuestionAndUserId" resultType="model.entity.ReTestQuestion">
+        select *
+        from relation_test_question
+        where test_id=#{testId} and question_id=#{questionId} and user_id=#{userId}
+    </select>
+    
+
+    <select id="findTestStudentViews" resultType="model.view.TestStudentView">
+        SELECT *
+        FROM test_student_view
+        <where>
+            <if test="testId != null and testId != ''">
+            AND test_id LIKE concat('%', #{testId}, '%')
+            </if>
+            <if test="testName != null and testName != ''">
+            AND test_name LIKE concat('%', #{testName}, '%')
+            </if>
+            <if test="className != null and className != ''">
+            AND class_name LIKE concat('%', #{className}, '%')
+            </if>
+            <if test="scoreId != null and scoreId != ''">
+            AND score_id LIKE concat('%', #{scoreId}, '%')
+            </if>
+            <if test="userId != null and userId != ''">
+            AND user_id LIKE concat('%', #{userId}, '%')
+            </if>
+            <if test="userName != null and userName != ''">
+            AND user_name LIKE concat('%', #{userName}, '%')
+            </if>
+            <if test="totalScore != null and totalScore != ''">
+            AND total_score LIKE concat('%', #{totalScore}, '%')
+            </if>
+            <if test="theMarkUserId != null and theMarkUserId != ''">
+            AND the_mark_user_id LIKE concat('%', #{theMarkUserId}, '%')
+            </if>
+            <if test="theMarkUserName != null and theMarkUserName != ''">
+            AND the_mark_user_name LIKE concat('%', #{theMarkUserName}, '%')
+            </if>
+        </where>
+        order by score_id desc
+    </select>
+
+    <update id="updateReTestQuestion">
+        update relation_test_question
+        set the_score=#{theScore}
+        where test_id=#{testId} and question_id=#{questionId} and user_id=#{userId}
+    </update>
+</mapper>
